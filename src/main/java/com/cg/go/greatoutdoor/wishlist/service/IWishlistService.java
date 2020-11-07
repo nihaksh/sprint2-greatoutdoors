@@ -10,8 +10,7 @@ public interface IWishlistService {
 	
 	List<WishlistItemEntity> findAll();
 
-	List<WishlistItemEntity> findByUserId(String userId);
-
+	
 
 	//WishlistItemEntity findWishlistItem(String productId, String userId);
 	//void addProductToWishlist(String prodId,long wishlistID);
@@ -20,5 +19,7 @@ public interface IWishlistService {
 	void deleteByUserId(int userId) ;
 
 	WishlistItemEntity addWishlistItem(WishlistItemEntity wishlistItem);
+
+	List<WishlistItemEntity> findByUserId(int userId);
 
 }

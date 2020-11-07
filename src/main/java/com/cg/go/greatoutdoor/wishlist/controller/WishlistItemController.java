@@ -1,4 +1,4 @@
-package com.cg.go.outdoor.wishlist.controller;
+package com.cg.go.greatoutdoor.wishlist.controller;
 
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import com.cg.go.greatoutdoor.wishlist.util.WishlistUtil;
 
 
 
-@RequestMapping("/WishlistItemEntity")
+@RequestMapping("/Wishlist")
 @RestController
 public class WishlistItemController {
 	@Autowired
@@ -35,24 +35,24 @@ public class WishlistItemController {
 	@Autowired
 	private WishlistUtil wishlistutil;
 	/**
-     * effective URL will be http://localhost:8585WishlistItemEntity/add
+     * effective URL will be http://localhost:8585Wishlist/add
 	 * @throws WishlistException 
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
     public WishlistItemDetails add(@RequestBody CreateWishlistItemRequest requestData) {
-    	WishlistItemEntity additem =wishlistService.addWishlistItem(new WishlistItemEntity(requestData.getUserId(), requestData.getProductId()));
+    	WishlistItemEntity additem =wishlistService.addWishlistItem(new WishlistItemEntity(requestData.getUserId()));
          return wishlistutil.toDetails(additem);
     }
 
     @GetMapping("/get/user/{id}")
-	public List<WishlistItemDetails> fetchCustomer(@PathVariable("id") String userId) 
+	public List<WishlistItemDetails> fetchCustomer(@PathVariable("id") int userId) 
 	{
     	List<WishlistItemEntity> add = wishlistService.findByUserId(userId);
 		return wishlistutil.toDetails(add);
 		
 	}
-	@RequestMapping("/viewallItems")
+	@GetMapping("/viewallItems")
 	public List<WishlistItemEntity> findAllItems(){
 		return wishlistService.findAll();
 	}

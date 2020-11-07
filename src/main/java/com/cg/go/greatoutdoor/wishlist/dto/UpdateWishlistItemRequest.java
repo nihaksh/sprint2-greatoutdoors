@@ -7,17 +7,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class UpdateWishlistItemRequest {
-	@NotBlank @Size(min =2, max = 20)
-	private long wishlistId;
-	@NotBlank @Size(min =2, max = 20)
+//	@NotBlank @Size(min =2, max = 20)
+	private int wishlistId;
+	//@NotBlank @Size(min =2, max = 20)
     private int userId;
-    @ElementCollection
-    @NotBlank @Size(min =2, max = 20)
-    private List<String> productId;
+    //@ElementCollection
+    //@NotBlank @Size(min =2, max = 20)
+   // private List<String> productId;
 	public long getWishlistId() {
 		return wishlistId;
 	}
-	public void setWishlistId(long wishlistId) {
+	public void setWishlistId(int wishlistId) {
 		this.wishlistId = wishlistId;
 	}
 	public int getUserId() {
@@ -26,10 +26,10 @@ public class UpdateWishlistItemRequest {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public List<String> getProductId() {
+	/*public List<String> getProductId() {
 		return productId;
 	}
 	public void setProductId(List<String> productId) {
 		this.productId = productId;
-	}
+	}*/
 }

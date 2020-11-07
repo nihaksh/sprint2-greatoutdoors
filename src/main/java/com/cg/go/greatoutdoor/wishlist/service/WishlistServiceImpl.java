@@ -31,7 +31,7 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 	}
 
 	@Override
-	public List<WishlistItemEntity> findByUserId(String userId) {
+	public List<WishlistItemEntity> findByUserId(int userId) {
 	     List<WishlistItemEntity> list=new ArrayList<WishlistItemEntity>();
         list=WishlistRepository.findByUserId(userId);
       	return list;
@@ -64,8 +64,12 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 */
 	@Override
 	public void deleteByUserId(int userId){
+		List<WishlistItemEntity> wishlist= findByUserId(userId);
+		for(WishlistItemEntity item : wishlist)
+		{
+			WishlistRepository.deleteById(item.getWishlistId());
+		}
 		
-		WishlistRepository.deleteById(userId);
        
 		
 	}

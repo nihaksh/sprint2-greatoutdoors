@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface IWishlistRepository extends JpaRepository<WishlistItemEntity,Integer>{
-	List<WishlistItemEntity> findAll();
+	//List<WishlistItemEntity> findAll();
 
-	List<WishlistItemEntity> findByUserId(String userId);
+	List<WishlistItemEntity> findByUserId(int userId);
 
 	//WishlistItemEntity findWishlistItem(String productId, String userId);
 	//void addProductToWishlist(String prodId,long wishlistID);

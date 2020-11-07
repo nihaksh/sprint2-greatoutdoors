@@ -26,6 +26,6 @@ public class WishlistUtil {
 	}
 
 	public WishlistItemDetails toDetails(WishlistItemEntity add) {
-		return new WishlistItemDetails(add.getWishlistId(),add.getUserId(), add.getProductId());
+		return new WishlistItemDetails(add.getWishlistId(),add.getUserId());
 	}
 }
