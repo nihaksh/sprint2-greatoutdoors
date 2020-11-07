@@ -4,7 +4,7 @@ package com.cg.go.outdoor.wishlist.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class WishlistItemController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
-    public WishlistItemDetails add(@RequestBody CreateWishlistItemRequest requestData) throws WishlistException {
+    public WishlistItemDetails add(@RequestBody CreateWishlistItemRequest requestData) {
     	WishlistItemEntity additem =wishlistService.addWishlistItem(new WishlistItemEntity(requestData.getUserId(), requestData.getProductId()));
          return wishlistutil.toDetails(additem);
     }
@@ -48,20 +48,20 @@ public class WishlistItemController {
     @GetMapping("/get/user/{id}")
 	public List<WishlistItemDetails> fetchCustomer(@PathVariable("id") String userId) 
 	{
-    	List<WishlistItemEntity> add = wishlistService.findWishlist(userId);
+    	List<WishlistItemEntity> add = wishlistService.findByUserId(userId);
 		return wishlistutil.toDetails(add);
 		
 	}
 	@RequestMapping("/viewallItems")
 	public List<WishlistItemEntity> findAllItems(){
-		return wishlistService.findAllItems();
+		return wishlistService.findAll();
 	}
 
  
     
     @DeleteMapping("/remove/{id}")
-    public String deleteWishlist(@PathVariable("id") String userId) throws WishlistException {
-        wishlistService.deleteWishlist(userId);
+    public String deleteWishlist(@PathVariable("id") int userId) {
+        wishlistService.deleteByUserId(userId);
         String response = "removed product with id=" + userId;
         return response;
     }

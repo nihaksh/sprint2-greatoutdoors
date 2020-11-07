@@ -13,34 +13,33 @@ import org.springframework.stereotype.Service;
 import com.cg.go.greatoutdoor.product.service.ProductServiceImpl;
 import com.cg.go.greatoutdoor.wishlist.dao.IWishlistRepository;
 import com.cg.go.greatoutdoor.wishlist.entity.WishlistItemEntity;
-import com.cg.go.greatoutdoor.wishlist.exception.WishlistException;
 @Transactional
 @Service
 public class WishlistServiceImpl  implements IWishlistService{
 private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.class);
 		
 	    @Autowired
-	IWishlistRepository daoWishlist;
+	IWishlistRepository WishlistRepository;
 
 	
      @Override
-	public List<WishlistItemEntity> findAllItems() {
+	public List<WishlistItemEntity> findAll() {
 		
         List<WishlistItemEntity> list=new ArrayList<WishlistItemEntity>();
-        list=daoWishlist.findAllItems();
+        list=WishlistRepository.findAll();
         return list;
 	}
 
 	@Override
-	public List<WishlistItemEntity> findWishlist(String userId) {
+	public List<WishlistItemEntity> findByUserId(String userId) {
 	     List<WishlistItemEntity> list=new ArrayList<WishlistItemEntity>();
-        list=daoWishlist.findWishlist(userId);
+        list=WishlistRepository.findByUserId(userId);
       	return list;
 	}
-
+/*
 	@Override
 	public WishlistItemEntity findWishlistItem(String productId, String userId) {
-	     WishlistItemEntity wishlistObject =daoWishlist.findWishlistItem(productId,userId);
+	     WishlistItemEntity wishlistObject =WishlistRepository.findWishlistItem(productId,userId);
 		return wishlistObject;
 	}
 
@@ -50,7 +49,7 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
          //throw new Exception("productid is null or empty");
 		//}
 		
-        daoWishlist.addProductToWishlist(prodId, wishlistID );
+		WishlistRepository.addProductToWishlist(prodId, wishlistID );
         
       
 		
@@ -59,25 +58,25 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 	@Override
 	public void deleteWishlistItem(String productId, String userId) throws WishlistException {
 		
-        daoWishlist.deleteWishlistItem(productId, userId);
+		WishlistRepository.deleteWishlistItem(productId, userId);
       
 	}
-
+*/
 	@Override
-	public void deleteWishlist(String userId) throws WishlistException {
+	public void deleteByUserId(int userId){
 		
-        daoWishlist.deleteWishlist(userId);
+		WishlistRepository.deleteById(userId);
        
 		
 	}
 
 	@Override
-	public WishlistItemEntity addWishlistItem(WishlistItemEntity wishlistItem) throws WishlistException {
-		if(wishlistItem==null){
-			throw new WishlistException("invalid wishlistitem");
-		}
+	public WishlistItemEntity addWishlistItem(WishlistItemEntity wishlistItem){
+	//	if(wishlistItem==null){
+		//	throw new WishlistException("invalid wishlistitem");
+		//}
 		
-        WishlistItemEntity wishlistObject=daoWishlist.addWishlistItem(wishlistItem);
+        WishlistItemEntity wishlistObject=WishlistRepository.save(wishlistItem);
       
 		return wishlistObject;
 	}

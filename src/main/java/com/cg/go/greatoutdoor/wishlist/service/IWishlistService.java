@@ -7,17 +7,18 @@ import com.cg.go.greatoutdoor.wishlist.exception.WishlistException;
 
 
 public interface IWishlistService {
+	
+	List<WishlistItemEntity> findAll();
 
-	List<WishlistItemEntity> findAllItems();
+	List<WishlistItemEntity> findByUserId(String userId);
 
-	List<WishlistItemEntity> findWishlist(String userId);
 
-	WishlistItemEntity findWishlistItem(String productId, String userId);
-	void addProductToWishlist(String prodId,long wishlistID);
-	void deleteWishlistItem(String productId, String userId) throws WishlistException;
+	//WishlistItemEntity findWishlistItem(String productId, String userId);
+	//void addProductToWishlist(String prodId,long wishlistID);
+	//void deleteWishlistItem(int productId, String userId) throws WishlistException;
 
-	void deleteWishlist(String userId) throws WishlistException;
+	void deleteByUserId(int userId) ;
 
-	WishlistItemEntity addWishlistItem(WishlistItemEntity wishlistItem) throws WishlistException;
+	WishlistItemEntity addWishlistItem(WishlistItemEntity wishlistItem);
 
 }
