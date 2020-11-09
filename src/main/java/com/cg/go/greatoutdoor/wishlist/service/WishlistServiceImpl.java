@@ -1,8 +1,9 @@
 package com.cg.go.greatoutdoor.wishlist.service;
-
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.html.parser.Entity;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.cg.go.greatoutdoor.product.service.ProductServiceImpl;
 import com.cg.go.greatoutdoor.wishlist.dao.IWishlistRepository;
 import com.cg.go.greatoutdoor.wishlist.entity.WishlistItemEntity;
+import com.cg.go.greatoutdoor.wishlist.exception.WishlistException;
+import com.cg.go.greatoutdoor.wishlist.exception.WishlistNotFoundException;
 @Transactional
 @Service
 public class WishlistServiceImpl  implements IWishlistService{
@@ -32,6 +35,13 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 
 	@Override
 	public List<WishlistItemEntity> findByUserId(int userId) {
+		Optional<WishlistItemEntity> optional=WishlistRepository.findById(userId);
+		if(!optional.isPresent()){
+            throw new WishlistNotFoundException("Product not found for id="+userId);
+        }
+	/*	if(userId==0){
+	         throw new WishlistException("UserId is null or empty");
+			}*/
 	     List<WishlistItemEntity> list=new ArrayList<WishlistItemEntity>();
         list=WishlistRepository.findByUserId(userId);
       	return list;
@@ -64,6 +74,10 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 */
 	@Override
 	public void deleteByUserId(int userId){
+		Optional<WishlistItemEntity> optional=WishlistRepository.findById(userId);
+		if(!optional.isPresent()){
+            throw new WishlistNotFoundException("Product not found for id="+userId);
+        }
 		List<WishlistItemEntity> wishlist= findByUserId(userId);
 		for(WishlistItemEntity item : wishlist)
 		{
@@ -79,7 +93,10 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 	//	if(wishlistItem==null){
 		//	throw new WishlistException("invalid wishlistitem");
 		//}
-		
+		List<WishlistItemEntity> wishlist = WishlistRepository.findByUserId(wishlistItem.getUserId());
+		if(wishlist != null) {
+			throw new WishlistException("Item already exists in wishlist");
+		}
         WishlistItemEntity wishlistObject=WishlistRepository.save(wishlistItem);
       
 		return wishlistObject;
