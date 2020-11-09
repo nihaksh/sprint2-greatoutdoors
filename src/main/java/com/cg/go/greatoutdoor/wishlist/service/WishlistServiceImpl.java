@@ -93,10 +93,10 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 	//	if(wishlistItem==null){
 		//	throw new WishlistException("invalid wishlistitem");
 		//}
-		List<WishlistItemEntity> wishlist = WishlistRepository.findByUserId(wishlistItem.getUserId());
-		if(wishlist != null) {
-			throw new WishlistException("Item already exists in wishlist");
-		}
+		boolean exists=wishlistItem.getUserId()!=0 &&  WishlistRepository.existsById(wishlistItem.getUserId());
+        if(exists){
+            throw new WishlistException("Cart already exists for id="+wishlistItem.getUserId());
+        }
         WishlistItemEntity wishlistObject=WishlistRepository.save(wishlistItem);
       
 		return wishlistObject;
