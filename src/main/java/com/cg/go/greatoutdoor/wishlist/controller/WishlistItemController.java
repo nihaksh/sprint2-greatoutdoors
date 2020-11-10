@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cg.go.greatoutdoor.wishlist.dto.AddProductToWishlistItemRequest;
 import com.cg.go.greatoutdoor.wishlist.dto.CreateWishlistItemRequest;
 import com.cg.go.greatoutdoor.wishlist.dto.WishlistItemDetails;
 import com.cg.go.greatoutdoor.wishlist.entity.WishlistItemEntity;
@@ -27,22 +28,21 @@ import com.cg.go.greatoutdoor.wishlist.util.WishlistUtil;
 
 
 
-@RequestMapping("/Wishlist")
+@RequestMapping("/wishlists")
 @RestController
 public class WishlistItemController {
 	@Autowired
 	public IWishlistService wishlistService;
 	@Autowired
 	private WishlistUtil wishlistutil;
-	/**
-     * effective URL will be http://localhost:8888Wishlist/add
-	 * @throws WishlistException 
-     */
+	
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/add")
-    public WishlistItemDetails add(@RequestBody CreateWishlistItemRequest requestData) {
-    	WishlistItemEntity additem =wishlistService.addWishlistItem(new WishlistItemEntity(requestData.getUserId()));
-         return wishlistutil.toDetails(additem);
+    @PostMapping("/products/add")
+    public WishlistItemDetails add(@RequestBody AddProductToWishlistItemRequest requestData) {
+    	wishlistService.addProductToWishlist( requestData.getProductId(), requestData.getWishlistId());
+    WishlistItemEntity wishlistitem =	wishlistService.findWishListById(requestData.getWishlistId());
+    	
+         return wishlistutil.toDetails(wishlistitem);
     }
 
     @GetMapping("/get/user/{id}")
@@ -52,14 +52,7 @@ public class WishlistItemController {
 		return wishlistutil.toDetails(add);
 		
 	}
-	@GetMapping("/viewallItems")
-	public List<WishlistItemEntity> findAllItems(){
-		return wishlistService.findAll();
-	}
-
- 
-    
-    @DeleteMapping("/remove/{id}")
+	    @DeleteMapping("/remove/{id}")
     public String deleteWishlist(@PathVariable("id") int userId) {
         wishlistService.deleteByUserId(userId);
         String response = "removed product with id=" + userId;
@@ -67,8 +60,12 @@ public class WishlistItemController {
     }
     
     
-	
-    
+	 @PostMapping("/add")
+   	    public WishlistItemDetails add(@RequestBody CreateWishlistItemRequest requestData) {
+    	WishlistItemEntity additem =wishlistService.addWishlistItem(new WishlistItemEntity(requestData.getUserId()));
+         return wishlistutil.toDetails(additem);
+    }
+	 
 
   
 

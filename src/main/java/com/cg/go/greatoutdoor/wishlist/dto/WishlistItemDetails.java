@@ -1,17 +1,18 @@
 package com.cg.go.greatoutdoor.wishlist.dto;
 
+import java.util.List;
 
 public class WishlistItemDetails {
 	private int wishlistId;
     private int userId;
-   // @ElementCollection
-   // private List<String> productId;
+  
+    private List<String> productIds;
     public WishlistItemDetails() {}
-	public WishlistItemDetails(int wishlistId, int userId) {
+	public WishlistItemDetails(int wishlistId, int userId, List<String> productIds) {
 		
 		this.wishlistId = wishlistId;
 		this.userId = userId;
-		//this.productId = productId;
+		this.productIds = productIds;
 	}
 	public int getWishlistId() {
 		return wishlistId;
@@ -25,10 +26,10 @@ public class WishlistItemDetails {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	/*public List<String> getProductId() {
-		return productId;
+	public List<String> getProductIds() {
+		return productIds;
 	}
-	public void setProductId(List<String> productId) {
-		this.productId = productId;
-	}*/
+	public void setProductIds(List<String> productIds) {
+		this.productIds = productIds;
+	}
 }

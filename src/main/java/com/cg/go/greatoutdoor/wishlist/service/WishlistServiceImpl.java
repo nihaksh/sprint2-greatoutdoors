@@ -3,6 +3,7 @@ import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.swing.text.html.parser.Entity;
 import javax.transaction.Transactional;
 
@@ -22,66 +23,34 @@ public class WishlistServiceImpl  implements IWishlistService{
 private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.class);
 		
 	    @Autowired
-	IWishlistRepository WishlistRepository;
+	private IWishlistRepository wishlistRepository;
 
 	
      @Override
 	public List<WishlistItemEntity> findAll() {
 		
         List<WishlistItemEntity> list=new ArrayList<WishlistItemEntity>();
-        list=WishlistRepository.findAll();
+        list=wishlistRepository.findAll();
         return list;
 	}
 
 	@Override
 	public List<WishlistItemEntity> findByUserId(int userId) {
-		Optional<WishlistItemEntity> optional=WishlistRepository.findById(userId);
-		if(!optional.isPresent()){
-            throw new WishlistNotFoundException("Product not found for id="+userId);
-        }
-	/*	if(userId==0){
-	         throw new WishlistException("UserId is null or empty");
-			}*/
-	     List<WishlistItemEntity> list=new ArrayList<WishlistItemEntity>();
-        list=WishlistRepository.findByUserId(userId);
-      	return list;
-	}
-/*
-	@Override
-	public WishlistItemEntity findWishlistItem(String productId, String userId) {
-	     WishlistItemEntity wishlistObject =WishlistRepository.findWishlistItem(productId,userId);
-		return wishlistObject;
+		List<WishlistItemEntity> optional=wishlistRepository.findByUserId(userId);
+		return optional;
 	}
 
-	@Override
-	public void addProductToWishlist(String prodId, long wishlistID) {
-		//if(prodId==null||prodId.isEmpty()){
-         //throw new Exception("productid is null or empty");
-		//}
-		
-		WishlistRepository.addProductToWishlist(prodId, wishlistID );
-        
-      
-		
-	}
-
-	@Override
-	public void deleteWishlistItem(String productId, String userId) throws WishlistException {
-		
-		WishlistRepository.deleteWishlistItem(productId, userId);
-      
-	}
-*/
 	@Override
 	public void deleteByUserId(int userId){
-		Optional<WishlistItemEntity> optional=WishlistRepository.findById(userId);
+		Optional<WishlistItemEntity> optional=wishlistRepository.findById(userId);
 		if(!optional.isPresent()){
             throw new WishlistNotFoundException("Product not found for id="+userId);
         }
 		List<WishlistItemEntity> wishlist= findByUserId(userId);
 		for(WishlistItemEntity item : wishlist)
 		{
-			WishlistRepository.deleteById(item.getWishlistId());
+			//WishlistRepository.deleteById(item.getWishlistId());
+			wishlistRepository.delete(item);
 		}
 		
        
@@ -91,15 +60,74 @@ private static final Logger Log = LoggerFactory.getLogger(ProductServiceImpl.cla
 	@Override
 	public WishlistItemEntity addWishlistItem(WishlistItemEntity wishlistItem){
 	//	if(wishlistItem==null){
-		//	throw new WishlistException("invalid wishlistitem");
+		//throw new WishlistException("invalid wishlistitem");
 		//}
-		boolean exists=wishlistItem.getWishlistId()!=0 &&  WishlistRepository.existsById(wishlistItem.getWishlistId());
+		boolean exists=wishlistItem.getWishlistId()!=0 &&  wishlistRepository.existsById(wishlistItem.getWishlistId());
         if(exists){
-            throw new WishlistException("Cart already exists for id="+wishlistItem.getUserId());
+            throw new WishlistException("Wishlist already exists for id="+wishlistItem.getUserId());
         }
-        WishlistItemEntity wishlistObject=WishlistRepository.save(wishlistItem);
+        WishlistItemEntity wishlistObject=wishlistRepository.save(wishlistItem);
       
 		return wishlistObject;
 	}
+
+	@Override
+	public WishlistItemEntity findWishlistItem(String productId, int userId) {
+		 List<WishlistItemEntity> list = findByUserId(userId);
+         for (WishlistItemEntity entity:list){
+         List<String>products=  entity.getProductId();
+         if(products!=null && products.contains(productId)){
+             return entity;
+         }
+        }
+
+        throw new WishlistNotFoundException("wishlist not found for user="+userId+" product="+productId);
+
+    }
+	
+	
+
+
+	@Override
+	public void addProductToWishlist(String prodId, int wishlistID) {
+		 WishlistItemEntity entity = findWishListById(wishlistID);
+	        List<String> productIds = entity.getProductId();
+	        if (productIds == null) {
+	            productIds = new ArrayList<>();
+	            entity.setProductId(productIds);
+	        }
+	        if (!productIds.contains(prodId)) {
+	            productIds.add(prodId);
+	            wishlistRepository.save(entity);
+	        }
+
+	    
+		
+		
+	}
+@Override
+	public WishlistItemEntity findWishListById(int wishlistID) {
+		
+	Optional<WishlistItemEntity> optional =	wishlistRepository.findById(wishlistID);
+	if(!optional.isPresent()){
+        throw new WishlistNotFoundException("wishlist not found for id="+wishlistID);
+    }
+		return optional.get();
+	}
+
+	@Override
+	public void deleteWishlistItem(String productId, int userId) throws WishlistException {
+		WishlistItemEntity entity = findWishlistItem(productId, userId);
+
+        List<String> productIds = entity.getProductId();
+        if (productIds == null || !productIds.contains(productId)) {
+            return;
+        }
+        productIds.remove(productId);
+        wishlistRepository.save(entity);
+    }
+
+	
+	
 
 }

@@ -10,25 +10,30 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Wishlist")
+@Table(name = "wishlists")
 public class WishlistItemEntity {
     @GeneratedValue
     @Id
     private int wishlistId;
     private int userId;
-   // @ElementCollection
-    //private List<String> productId;
+    @ElementCollection
+    private List<String> productId;
 
-    public WishlistItemEntity(int userId) {
+    public WishlistItemEntity(int userId, List<String> productId) {
 
         this.userId = userId;
-      //  this.productId = productId;
+       this.productId = productId;
     }
 
     public WishlistItemEntity() {
+    	
     }
 
-    public int getWishlistId() {
+    public WishlistItemEntity(int userId) {
+		
+	}
+
+	public int getWishlistId() {
         return wishlistId;
     }
 
@@ -44,13 +49,13 @@ public class WishlistItemEntity {
         this.userId = userId;
     }
 
-   // public List<String> getProductId() {
-     //   return productId;
-    //}
+    public List<String> getProductId() {
+        return productId;
+    }
 
-  //  public void setProductId(List<String> productId) {
-    //    this.productId = productId;
-    //}
+    public void setProductId(List<String> productId) {
+        this.productId = productId;
+    }
 
     @Override
     public int hashCode() {
